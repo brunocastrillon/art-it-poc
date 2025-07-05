@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRUD.Infra.Data.Repositories
 {
-    internal class ClienteRepository : BaseRepository, IClienteRepository
+    public class ClienteRepository : BaseRepository, IClienteRepository
     {
         public ClienteRepository(AppDbContext context) : base(context) { }
 
