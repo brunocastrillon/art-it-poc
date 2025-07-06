@@ -7,7 +7,7 @@ namespace CRUD.Infra.IoC.Databases
 {
     public static class Sqlite
     {
-        public static IServiceCollection AddSqlite(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddSqliteContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(

@@ -1,25 +1,33 @@
-var builder = WebApplication.CreateBuilder(args);
+using CRUD.Infra.IoC;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+/// - Ioc(Contexto, Serviços(application), Repositorios(Infra))
+///
+builder.Services.AddInfrastructure(builder.Configuration);
+
+/// - API / Swagger
+/// 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
+/// - Middlewares
+/// 
 if (app.Environment.IsDevelopment())
 {
+    // Aplicar migrações automaticamente em dev
+    //using var scope = app.Services.CreateScope();
+    //var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //db.Database.Migrate();
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
