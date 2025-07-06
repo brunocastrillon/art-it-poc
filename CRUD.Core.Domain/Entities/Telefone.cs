@@ -18,6 +18,11 @@ namespace CRUD.Core.Domain.Entities
 
         public TipoTelefone? TipoTelefone { get; set; }
 
+        public Telefone()
+        {
+                
+        }
+
         public Telefone(int codigoCliente, string numeroTelefone, int codigoTipoTelefone, string operadora, bool ativo)
         {
             ValidateId(codigoCliente);

@@ -23,4 +23,8 @@
     <ProjectReference Include="..\CRUD.Core.Domain\CRUD.Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DB\" />
+  </ItemGroup>
+
 </Project>

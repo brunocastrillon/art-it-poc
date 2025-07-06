@@ -28,6 +28,11 @@ namespace CRUD.Core.Domain.Entities
 
         public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
 
+        public Cliente()
+        {
+                
+        }
+
         public Cliente(int codigoCliente, string razaoSocial, string nomeFantasia, string tipoPessoa, string documento, string endereco, string complemento, string bairro, string cidade, string cep, string uf)
         {
             ValidateId(codigoCliente);

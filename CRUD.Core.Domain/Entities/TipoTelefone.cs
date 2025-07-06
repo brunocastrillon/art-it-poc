@@ -10,6 +10,11 @@ namespace CRUD.Core.Domain.Entities
 
         public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
 
+        public TipoTelefone()
+        {
+
+        }
+
         public TipoTelefone(int codigoTipoTelefone, string descricaoTipoTelefone)
         {
             ValidateId(codigoTipoTelefone);
