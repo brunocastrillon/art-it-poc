@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "Clientes";
+}
+
+<h2>Clientes</h2>
+
+<!-- Botão novo cliente -->
+<button id="btnNovo" class="btn btn-success mb-3">Novo Cliente</button>
+
+<!-- Tabela -->
+<table class="table table-bordered" id="clientesTable">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Razão Social</th>
+            <th>Nome Fantasia</th>
+            <th>Documento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Modal Cliente -->
+<div class="modal fade" id="clienteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="clienteForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="codigoCliente">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Razão Social</label>
+                            <input type="text" class="form-control" id="razaoSocial" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Nome Fantasia</label>
+                            <input type="text" class="form-control" id="nomeFantasia" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Tipo de Pessoa</label>
+                            <input type="text" class="form-control" id="tipoPessoa" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Documento</label>
+                            <input type="text" class="form-control" id="documento" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>endereco</label>
+                            <input type="text" class="form-control" id="endereco" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>complemento</label>
+                            <input type="text" class="form-control" id="complemento" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>bairro</label>
+                            <input type="text" class="form-control" id="bairro" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>cidade</label>
+                            <input type="text" class="form-control" id="cidade" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>cep</label>
+                            <input type="text" class="form-control" id="cep" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>uf</label>
+                            <input type="text" class="form-control" id="uf" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const apiUrl = "https://localhost:7294/api/Cliente";
+        let modal;
+
+        $(document).ready(function () {
+            modal = new bootstrap.Modal(document.getElementById('clienteModal'));
+            carregarClientes();
+
+            $("#btnNovo").click(function () {
+                limparFormulario();
+                modal.show();
+            });
+
+            $("#clienteForm").submit(function (e) {
+                e.preventDefault();
+
+                const cliente = {
+                    codigoCliente: $("#codigoCliente").val() || 0,
+                    razaoSocial: $("#razaoSocial").val(),
+                    nomeFantasia: $("#nomeFantasia").val(),
+                    tipoPessoa: $("#tipoPessoa").val(),
+                    documento: $("#documento").val(),
+                    endereco: $("#endereco").val(),
+                    complemento: $("#complemento").val(),
+                    bairro: $("#bairro").val(),
+                    cidade: $("#cidade").val(),
+                    cep: $("#cep").val(),
+                    uf: $("#uf").val()
+                };
+
+                if (cliente.codigoCliente == 0) {
+                    // $.post(apiUrl, cliente)
+                    //     .done(() => {
+                    //         modal.hide();
+                    //         carregarClientes();
+                    //     });
+                    $.ajax({
+                        url: apiUrl,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(cliente),
+                        success: function () {
+                            modal.hide();
+                            carregarClientes();
+                        },
+                        error: function (err) {
+                            console.error(err);
+                            alert("Erro ao salvar o cliente");
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: `${apiUrl}/${cliente.codigoCliente}`,
+                        type: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify(cliente),
+                        success: () => {
+                            modal.hide();
+                            carregarClientes();
+                        }
+                    });
+                }
+            });
+
+            $(document).on("click", ".btn-editar", function () {
+                const id = $(this).data("id");
+                $.get(`${apiUrl}/${id}`, function (c) {
+                    $("#codigoCliente").val(c.codigoCliente);
+                    $("#razaoSocial").val(c.razaoSocial);
+                    $("#nomeFantasia").val(c.nomeFantasia);
+                    $("#documento").val(c.documento);
+                    modal.show();
+                });
+            });
+
+            $(document).on("click", ".btn-excluir", function () {
+                const id = $(this).data("id");
+                if (confirm("Deseja realmente excluir este cliente?")) {
+                    $.ajax({
+                        url: `${apiUrl}/${id}`,
+                        type: "DELETE",
+                        success: () => carregarClientes()
+                    });
+                }
+            });
+        });
+
+        function carregarClientes() {
+            $.get(apiUrl, function (data) {
+                const tbody = $("#clientesTable tbody");
+                tbody.empty();
+
+                data.forEach(c => {
+                    const row = `<tr>
+                        <td>${c.codigoCliente}</td>
+                        <td>${c.razaoSocial}</td>
+                        <td>${c.nomeFantasia}</td>
+                        <td>${c.documento}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn-editar" data-id="${c.codigoCliente}">Editar</button>
+                            <button class="btn btn-sm btn-danger btn-excluir" data-id="${c.codigoCliente}">Excluir</button>
+                        </td>
+                    </tr>`;
+                    tbody.append(row);
+                });
+            });
+        }
+
+        function limparFormulario() {
+            $("#codigoCliente").val('');
+            $("#razaoSocial").val('');
+            $("#nomeFantasia").val('');
+            $("#documento").val('');
+        }
+    </script>
+}

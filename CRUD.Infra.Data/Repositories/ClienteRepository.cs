@@ -17,7 +17,9 @@ namespace CRUD.Infra.Data.Repositories
 
         public async Task<Cliente> GetByIdAsync(int id)
         {
-            return await _context.Clientes.FindAsync(id);
+            return await _context.Clientes.AsNoTracking()
+                                          .FirstOrDefaultAsync(c => c.CodigoCliente == id);
+            //return await _context.Clientes.FindAsync(id);
         }
     }
 }
