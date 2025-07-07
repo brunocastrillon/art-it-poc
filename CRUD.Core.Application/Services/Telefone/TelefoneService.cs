@@ -15,7 +15,7 @@ namespace CRUD.Core.Application.Services.Telefone
             _mapper = mapper;
         }
 
-        public async Task<TelefoneDTO> AddAsync(TelefoneDTO telefoneDTO)
+        public async Task<TelefoneDTO> AddAsync(TelefoneCreateDTO telefoneDTO)
         {
             Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(telefoneDTO);
             Domain.Entities.Telefone entidadeResult = await _telefoneRepository.CreateAsync(entidade);
@@ -33,25 +33,30 @@ namespace CRUD.Core.Application.Services.Telefone
             return dto;
         }
 
-        public async Task<TelefoneDTO> GetByIdAsync(int id)
+        public async Task<IEnumerable<TelefoneDTO>> GetByClienteAsync(int codigoCliente)
         {
-            Domain.Entities.Telefone entidade = await _telefoneRepository.GetByIdAsync(id);
-            TelefoneDTO dto = _mapper.Map<TelefoneDTO>(entidade);
-            
+            IEnumerable<Domain.Entities.Telefone> entidade = await _telefoneRepository.GetByClienteAsync(codigoCliente);
+            IEnumerable<TelefoneDTO> dto = _mapper.Map<IEnumerable<TelefoneDTO>>(entidade);
+
             return dto;
         }
 
-        public async Task<TelefoneDTO> RemoveAsync(int id)
+        public async Task<TelefoneDTO> GetByIdAsync(int codigoCliente, string numeroTelefone)
         {
-            Domain.Entities.Telefone entidade = _telefoneRepository.GetByIdAsync(id).Result;
-            Domain.Entities.Telefone entidadeResult = await _telefoneRepository.DeleteAsync(entidade);
-            
-            TelefoneDTO dtoResult = _mapper.Map<TelefoneDTO>(entidadeResult);
-            
-            return dtoResult;
+            Domain.Entities.Telefone entidade = await _telefoneRepository.GetByIdAsync(codigoCliente, numeroTelefone);
+            TelefoneDTO dto = _mapper.Map<TelefoneDTO>(entidade);
+
+            return dto;
         }
 
-        public async Task<TelefoneDTO> UpdateAsync(TelefoneDTO TelefoneDTO)
+        public async Task<bool> RemoveAsync(int codigoCliente, string numeroTelefone)
+        {
+            bool result = await _telefoneRepository.DeleteTelefoneAsync(codigoCliente, numeroTelefone);
+
+            return result;
+        }
+
+        public async Task<TelefoneDTO> UpdateAsync(TelefoneCreateDTO TelefoneDTO)
         {
             Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(TelefoneDTO);
             Domain.Entities.Telefone entidadeResult = await _telefoneRepository.UpdateAsync(entidade);

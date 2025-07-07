@@ -4,10 +4,8 @@
 
 <h2>Clientes</h2>
 
-<!-- Botão novo cliente -->
-<button id="btnNovo" class="btn btn-success mb-3">Novo Cliente</button>
+<button class="btn btn-success mb-3" id="btnNovo">Novo Cliente</button>
 
-<!-- Tabela -->
 <table class="table table-bordered" id="clientesTable">
     <thead>
         <tr>
@@ -21,72 +19,103 @@
     <tbody></tbody>
 </table>
 
-<!-- Modal Cliente -->
+<h4 class="mt-4">Telefones do Cliente</h4>
+<table class="table table-bordered" id="tabelaTelefones">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Tipo</th>
+            <th>Operadora</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Modal -->
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="clienteForm" novalidate>
                 <div class="modal-header">
-                    <h5 class="modal-title">Cliente</h5>
+                    <h5 class="modal-title">Cadastro de Cliente</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-
-                    <input type="hidden" id="codigoCliente">
+                    <input type="hidden" id="codigoCliente" />
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="razaoSocial" class="form-label">Razão Social</label>
+                            <label class="form-label">Razão Social</label>
                             <input type="text" class="form-control" id="razaoSocial" required>
                             <div class="invalid-feedback">Informe a Razão Social.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="nomeFantasia" class="form-label">Nome Fantasia</label>
+                            <label class="form-label">Nome Fantasia</label>
                             <input type="text" class="form-control" id="nomeFantasia" required>
                             <div class="invalid-feedback">Informe o Nome Fantasia.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="tipoPessoa" class="form-label">Tipo de Pessoa</label>
-                            <input type="text" class="form-control" id="tipoPessoa" required>
-                            <div class="invalid-feedback">Informe o Tipo de Pessoa.</div>
+                            <label class="form-label">Tipo Pessoa</label>
+                            <input type="text" class="form-control" id="tipoPessoa">
                         </div>
                         <div class="col-md-6">
-                            <label for="documento" class="form-label">Documento</label>
+                            <label class="form-label">Documento</label>
                             <input type="text" class="form-control" id="documento" required>
                             <div class="invalid-feedback">Informe o Documento.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="endereco" class="form-label">endereco</label>
-                            <input type="text" class="form-control" id="endereco" required>
-                            <div class="invalid-feedback">Informe o Endereço.</div>
+                            <label class="form-label">Endereço</label>
+                            <input type="text" class="form-control" id="endereco">
                         </div>
                         <div class="col-md-6">
-                            <label for="complemento" class="form-label">complemento</label>
-                            <input type="text" class="form-control" id="complemento" required>
-                            <div class="invalid-feedback">Informe uma  informação adicional.</div>
+                            <label class="form-label">Complemento</label>
+                            <input type="text" class="form-control" id="complemento">
                         </div>
                         <div class="col-md-6">
-                            <label for="bairro" class="form-label">bairro</label>
-                            <input type="text" class="form-control" id="bairro" required>
-                            <div class="invalid-feedback">Informe o Bairro.</div>
+                            <label class="form-label">Bairro</label>
+                            <input type="text" class="form-control" id="bairro">
                         </div>
                         <div class="col-md-6">
-                            <label for="cidade" class="form-label">cidade</label>
-                            <input type="text" class="form-control" id="cidade" required>
-                            <div class="invalid-feedback">Informe a Cidade.</div>
+                            <label class="form-label">Cidade</label>
+                            <input type="text" class="form-control" id="cidade">
                         </div>
                         <div class="col-md-6">
-                            <label for="cep" class="form-label">cep</label>
-                            <input type="text" class="form-control" id="cep" required>
-                            <div class="invalid-feedback">Informe o CEP.</div>
+                            <label class="form-label">CEP</label>
+                            <input type="text" class="form-control" id="cep">
                         </div>
                         <div class="col-md-6">
-                            <label for="uf" class="form-label">uf</label>
-                            <input type="text" class="form-control" id="uf" required>
-                            <div class="invalid-feedback">Informe a UF.</div>
+                            <label class="form-label">UF</label>
+                            <input type="text" class="form-control" id="uf">
                         </div>
                     </div>
 
+                    <hr />
+                    <h5>Telefones</h5>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="numeroTelefone" placeholder="Número">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="operadora" placeholder="Operadora">
+                        </div>
+                        <div class="col-md-4">
+                            <select id="tipoTelefoneSelect" class="form-select">
+                                <option value="">Tipo de Telefone</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-2" id="btnAddTelefone">Adicionar Telefone</button>
+
+                    <table class="table table-sm table-bordered" id="tabelaTelefonesTemp">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Operadora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>
@@ -102,22 +131,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const apiUrl = "https://localhost:7294/api/Cliente";
+        const apiUrl = "https://localhost:7294/api/cliente";
         let modal;
+        let telefonesTemp = [];
 
         $(document).ready(function () {
             modal = new bootstrap.Modal(document.getElementById('clienteModal'));
             carregarClientes();
 
-            $("#btnNovo").click(function () {
+            $("#btnNovo").click(() => {
                 limparFormulario();
+                carregarTiposTelefone();
                 modal.show();
             });
 
             $("#clienteForm").submit(function (e) {
                 e.preventDefault();
-
-                let form = this;
+                const form = this;
 
                 if (!form.checkValidity()) {
                     form.classList.add('was-validated');
@@ -135,36 +165,55 @@
                     bairro: $("#bairro").val(),
                     cidade: $("#cidade").val(),
                     cep: $("#cep").val(),
-                    uf: $("#uf").val()
+                    uf: $("#uf").val(),
+                    telefones: telefonesTemp
                 };
 
-                if (cliente.codigoCliente == 0) {
-                    $.ajax({
-                        url: apiUrl,
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(cliente),
-                        success: function () {
-                            modal.hide();
-                            carregarClientes();
-                        },
-                        error: function (err) {
-                            console.error(err);
-                            alert("Erro ao salvar o cliente");
-                        }
-                    });
-                } else {
-                    $.ajax({
-                        url: `${apiUrl}/${cliente.codigoCliente}`,
-                        type: "PUT",
-                        contentType: "application/json",
-                        data: JSON.stringify(cliente),
-                        success: () => {
-                            modal.hide();
-                            carregarClientes();
-                        }
-                    });
+                const metodo = cliente.codigoCliente == 0 ? "POST" : "PUT";
+                const url = cliente.codigoCliente == 0 ? apiUrl : `${apiUrl}/${cliente.codigoCliente}`;
+
+                $.ajax({
+                    url: url,
+                    type: metodo,
+                    contentType: "application/json",
+                    data: JSON.stringify(cliente),
+                    success: () => {
+                        modal.hide();
+                        carregarClientes();
+                    }
+                });
+            });
+
+            $("#btnAddTelefone").click(() => {
+                const numero = $("#numeroTelefone").val();
+                const operadora = $("#operadora").val();
+                const tipoId = $("#tipoTelefoneSelect").val();
+                const tipoTexto = $("#tipoTelefoneSelect option:selected").text();
+
+                if (!numero || !operadora || !tipoId) {
+                    alert("Informe número, operadora e tipo.");
+                    return;
                 }
+
+                if (telefonesTemp.some(t => t.numeroTelefone === numero)) {
+                    alert("Telefone já adicionado.");
+                    return;
+                }
+
+                telefonesTemp.push({
+                    numeroTelefone: numero,
+                    operadora: operadora,
+                    codigoTipoTelefone: parseInt(tipoId),
+                    tipoTelefone: { descricaoTipoTelefone: tipoTexto },
+                    ativo: true,
+                    dataInsercao: new Date().toISOString(),
+                    usuarioInsercao: "WebApp"
+                });
+
+                atualizarTabelaTelefonesTemp();
+                $("#numeroTelefone").val('');
+                $("#operadora").val('');
+                $("#tipoTelefoneSelect").val('');
             });
 
             $(document).on("click", ".btn-editar", function () {
@@ -173,7 +222,17 @@
                     $("#codigoCliente").val(c.codigoCliente);
                     $("#razaoSocial").val(c.razaoSocial);
                     $("#nomeFantasia").val(c.nomeFantasia);
+                    $("#tipoPessoa").val(c.tipoPessoa);
                     $("#documento").val(c.documento);
+                    $("#endereco").val(c.endereco);
+                    $("#complemento").val(c.complemento);
+                    $("#bairro").val(c.bairro);
+                    $("#cidade").val(c.cidade);
+                    $("#cep").val(c.cep);
+                    $("#uf").val(c.uf);
+                    telefonesTemp = c.telefones || [];
+                    atualizarTabelaTelefonesTemp();
+                    carregarTiposTelefone();
                     modal.show();
                 });
             });
@@ -184,40 +243,72 @@
                     $.ajax({
                         url: `${apiUrl}/${id}`,
                         type: "DELETE",
-                        success: () => carregarClientes()
+                        success: carregarClientes
                     });
                 }
+            });
+
+            $(document).on("click", ".btn-vertelefones", function () {
+                const id = $(this).data("id");
+                $.get(`${apiUrl}/${id}`, function (cliente) {
+                    const tbody = $("#tabelaTelefones tbody").empty();
+                    (cliente.telefones || []).forEach(t => {
+                        tbody.append(`<tr><td>${t.numeroTelefone}</td><td>${t.tipoTelefone?.descricaoTipoTelefone || ''}</td><td>${t.operadora}</td></tr>`);
+                    });
+                });
             });
         });
 
         function carregarClientes() {
             $.get(apiUrl, function (data) {
-                const tbody = $("#clientesTable tbody");
-                tbody.empty();
-
+                const tbody = $("#clientesTable tbody").empty();
                 data.forEach(c => {
-                    const row = `<tr>
+                    tbody.append(`<tr>
                         <td>${c.codigoCliente}</td>
                         <td>${c.razaoSocial}</td>
                         <td>${c.nomeFantasia}</td>
                         <td>${c.documento}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary btn-editar" data-id="${c.codigoCliente}">Editar</button>
-                            <button class="btn btn-sm btn-danger btn-excluir" data-id="${c.codigoCliente}">Excluir</button>
+                            <button class="btn btn-primary btn-sm btn-editar" data-id="${c.codigoCliente}">Editar</button>
+                            <button class="btn btn-danger btn-sm btn-excluir" data-id="${c.codigoCliente}">Excluir</button>
+                            <button class="btn btn-info btn-sm btn-vertelefones" data-id="${c.codigoCliente}">Telefones</button>
                         </td>
-                    </tr>`;
-                    tbody.append(row);
+                    </tr>`);
+                });
+            });
+        }
+
+        function atualizarTabelaTelefonesTemp() {
+            const tbody = $("#tabelaTelefonesTemp tbody").empty();
+            telefonesTemp.forEach(t => {
+                tbody.append(`<tr>
+                    <td>${t.numeroTelefone}</td>
+                    <td>${t.operadora}</td>
+                    <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}">Remover</button></td>
+                </tr>`);
+            });
+        }
+
+        $(document).on("click", ".btn-remover-telefone", function () {
+            const numero = $(this).data("numero");
+            telefonesTemp = telefonesTemp.filter(t => t.numeroTelefone !== numero);
+            atualizarTabelaTelefonesTemp();
+        });
+
+        function carregarTiposTelefone() {
+            $.get("https://localhost:7294/api/TipoTelefone", function (data) {
+                const select = $("#tipoTelefoneSelect").empty().append(`<option value="">Tipo de Telefone</option>`);
+                data.forEach(t => {
+                    select.append(`<option value="${t.codigoTipoTelefone}">${t.descricaoTipoTelefone}</option>`);
                 });
             });
         }
 
         function limparFormulario() {
-            $("#codigoCliente").val('');
-            $("#razaoSocial").val('');
-            $("#nomeFantasia").val('');
-            $("#documento").val('');
-
-            // $("#clienteForm").classList.remove('was-validated');
+            document.getElementById("clienteForm").reset();
+            document.getElementById("clienteForm").classList.remove('was-validated');
+            telefonesTemp = [];
+            atualizarTabelaTelefonesTemp();
         }
     </script>
 }

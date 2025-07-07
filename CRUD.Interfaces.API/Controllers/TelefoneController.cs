@@ -1,73 +1,92 @@
-﻿using CRUD.Core.Application.Services.Cliente;
+﻿using CRUD.Core.Application.DTO;
 using CRUD.Core.Application.Services.Telefone;
+using CRUD.Core.Domain.Contracts;
+using CRUD.Core.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUD.Interfaces.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class TelefoneController : ControllerBase
+    [Route("api/[controller]")]
+    public class TelefonesController : ControllerBase
     {
         private readonly ITelefoneService _telefoneService;
 
-        public TelefoneController(ITelefoneService telefoneService)
+        public TelefonesController(ITelefoneService telefoneService)
         {
             _telefoneService = telefoneService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Core.Application.DTO.TelefoneDTO>>> Get()
+        // GET: api/telefones/123
+        [HttpGet("{codigoCliente}")]
+        public async Task<ActionResult<IEnumerable<TelefoneDTO>>> GetByCliente(int codigoCliente)
         {
-            IEnumerable<Core.Application.DTO.TelefoneDTO> dto = await _telefoneService.GetAsync();
+            IEnumerable<TelefoneDTO> telefones = await _telefoneService.GetByClienteAsync(codigoCliente);
             
-            return Ok(dto);
+            return Ok(telefones);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Core.Application.DTO.TelefoneDTO>> Get(int id)
+        /// <summary>
+        /// GET: api/telefones/123/11999998888
+        /// </summary>
+        /// <param name="codigoCliente"></param>
+        /// <param name="numeroTelefone"></param>
+        /// <returns></returns>
+        [HttpGet("{codigoCliente}/{numeroTelefone}")]
+        public async Task<ActionResult<TelefoneDTO>> GetPorId(int codigoCliente, string numeroTelefone)
         {
-            Core.Application.DTO.TelefoneDTO dto = await _telefoneService.GetByIdAsync(id);
-
-            if (dto == null)
+            var telefone = await _telefoneService.GetByIdAsync(codigoCliente, numeroTelefone);
+            if (telefone == null)
                 return NotFound();
 
-            return Ok(dto);
+            return Ok(telefone);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Core.Application.DTO.TelefoneDTO dto)
+        public async Task<ActionResult> Post([FromBody] TelefoneCreateDTO telefone)
         {
-            await _telefoneService.AddAsync(dto);
-
-            return CreatedAtAction(nameof(Get), new { id = dto.NumeroTelefone }, dto);
+            await _telefoneService.AddAsync(telefone);
+            return CreatedAtAction(nameof(GetPorId), new
+            {
+                codigoCliente = telefone.CodigoCliente,
+                numeroTelefone = telefone.NumeroTelefone
+            }, telefone);
         }
 
-        [HttpPut("{numeroTelefone}")]
-        public async Task<ActionResult> Put(int numeroTelefone, [FromBody] Core.Application.DTO.TelefoneDTO dto)
+        /// <summary>
+        /// PUT: api/telefones/123/11999998888
+        /// </summary>
+        /// <param name="codigoCliente"></param>
+        /// <param name="numeroTelefone"></param>
+        /// <param name="telefone"></param>
+        /// <returns></returns>
+        [HttpPut("{codigoCliente}/{numeroTelefone}")]
+        public async Task<ActionResult> Put(int codigoCliente, string numeroTelefone, [FromBody] TelefoneCreateDTO telefone)
         {
-            if (numeroTelefone != int.Parse(dto.NumeroTelefone))
-                return BadRequest("ID do tipo de telefone não confere com o corpo da requisição.");
+            if (codigoCliente != telefone.CodigoCliente || numeroTelefone != telefone.NumeroTelefone)
+                return BadRequest("Chave primária não confere.");
 
-            Core.Application.DTO.TelefoneDTO existente = await _telefoneService.GetByIdAsync(numeroTelefone);
-            
+            var existente = await _telefoneService.GetByIdAsync(codigoCliente, numeroTelefone);
             if (existente == null)
                 return NotFound();
 
-            await _telefoneService.UpdateAsync(dto);
-            
+            await _telefoneService.UpdateAsync(telefone);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        /// <summary>
+        /// DELETE: api/telefones/123/11999998888 
+        /// </summary>
+        /// <param name="codigoCliente"></param>
+        /// <param name="numeroTelefone"></param>
+        /// <returns></returns>
+        [HttpDelete("{codigoCliente}/{numeroTelefone}")]
+        public async Task<ActionResult> Delete(int codigoCliente, string numeroTelefone)
         {
-            Core.Application.DTO.TelefoneDTO dto = await _telefoneService.GetByIdAsync(id);
-            
-            if (dto == null)
+            var sucesso = await _telefoneService.RemoveAsync(codigoCliente, numeroTelefone);
+            if (!sucesso)
                 return NotFound();
 
-            await _telefoneService.RemoveAsync(id);
-            
             return NoContent();
         }
     }

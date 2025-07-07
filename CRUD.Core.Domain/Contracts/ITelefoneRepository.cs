@@ -6,6 +6,10 @@ namespace CRUD.Core.Domain.Contracts
     {
         Task<IEnumerable<Telefone>> GetAsync();
 
-        Task<Telefone> GetByIdAsync(int id);
+        Task<IEnumerable<Telefone>> GetByClienteAsync(int codigoCliente);
+
+        Task<Telefone?> GetByIdAsync(int codigoCliente, string numeroTelefone);
+
+        Task<bool> DeleteTelefoneAsync(int codigoCliente, string numeroTelefone);
     }
 }

@@ -4,14 +4,16 @@ namespace CRUD.Core.Application.Services.Telefone
 {
     public interface ITelefoneService
     {
-        Task<TelefoneDTO> AddAsync(TelefoneDTO telefoneDTO);
+        Task<TelefoneDTO> AddAsync(TelefoneCreateDTO telefoneDTO);
 
         Task<IEnumerable<TelefoneDTO>> GetAsync();
 
-        Task<TelefoneDTO> GetByIdAsync(int id);
+        Task<IEnumerable<TelefoneDTO>> GetByClienteAsync(int codigoCliente);
 
-        Task<TelefoneDTO> RemoveAsync(int id);
+        Task<TelefoneDTO> GetByIdAsync(int codigoCliente, string numeroTelefone);
 
-        Task<TelefoneDTO> UpdateAsync(TelefoneDTO telefoneDTO);
+        Task<bool> RemoveAsync(int codigoCliente, string numeroTelefone);
+
+        Task<TelefoneDTO> UpdateAsync(TelefoneCreateDTO telefoneDTO);
     }
 }

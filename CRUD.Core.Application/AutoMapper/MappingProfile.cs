@@ -9,8 +9,10 @@ namespace CRUD.Core.Application.AutoMapper
         public MappingProfile()
         {
             CreateMap<Cliente, ClienteDTO>().ReverseMap();
-            CreateMap<Telefone, TelefoneDTO>().ReverseMap();
-            CreateMap<TipoTelefone, TipoTelefoneDTO>().ReverseMap();
+
+            CreateMap<Telefone, TelefoneDTO>().ForMember(dest => dest.TipoTelefoneDesc, opt => opt.MapFrom(src => src.TipoTelefone.DescricaoTipoTelefone));
+
+            CreateMap<TelefoneCreateDTO, Telefone>();
         }
     }
 }
