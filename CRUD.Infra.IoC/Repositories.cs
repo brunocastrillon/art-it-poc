@@ -9,6 +9,8 @@ namespace CRUD.Infra.IoC
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
             services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<ITipoTelefoneRepository, TipoTelefoneRepository>();
+            services.AddScoped<ITelefoneRepository, TelefoneRepository>();
 
             return services;
         }

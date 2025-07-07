@@ -15,7 +15,7 @@ namespace CRUD.Core.Application.Services.Cliente
             _mapper = mapper;
         }
 
-        public async Task<ClienteDTO> Add(ClienteDTO clienteDTO)
+        public async Task<ClienteDTO> AddAsync(ClienteDTO clienteDTO)
         {
             Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteDTO);
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.CreateAsync(entidade);
@@ -25,7 +25,7 @@ namespace CRUD.Core.Application.Services.Cliente
             return dtoResult;
         }
 
-        public async Task<IEnumerable<ClienteDTO>> Get()
+        public async Task<IEnumerable<ClienteDTO>> GetAsync()
         {
             IEnumerable<Domain.Entities.Cliente> entidade = await _clienteRepository.GetAsync();
             IEnumerable<ClienteDTO> dto = _mapper.Map<IEnumerable<ClienteDTO>>(entidade);
@@ -33,7 +33,7 @@ namespace CRUD.Core.Application.Services.Cliente
             return dto;
         }
 
-        public async Task<ClienteDTO> GetById(int id)
+        public async Task<ClienteDTO> GetByIdAsync(int id)
         {
             Domain.Entities.Cliente entidade = await _clienteRepository.GetByIdAsync(id);
             ClienteDTO dto = _mapper.Map<ClienteDTO>(entidade);
@@ -41,7 +41,7 @@ namespace CRUD.Core.Application.Services.Cliente
             return dto;
         }
 
-        public async Task<ClienteDTO> Remove(int id)
+        public async Task<ClienteDTO> RemoveAsync(int id)
         {
             Domain.Entities.Cliente entidade = _clienteRepository.GetByIdAsync(id).Result;
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.DeleteAsync(entidade);
@@ -51,7 +51,7 @@ namespace CRUD.Core.Application.Services.Cliente
             return dtoResult;
         }
 
-        public async Task<ClienteDTO> Update(ClienteDTO clienteDTO)
+        public async Task<ClienteDTO> UpdateAsync(ClienteDTO clienteDTO)
         {
             Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteDTO);
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.UpdateAsync(entidade);
