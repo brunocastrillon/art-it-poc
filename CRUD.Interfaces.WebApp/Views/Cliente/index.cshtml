@@ -25,7 +25,7 @@
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="clienteForm">
+            <form id="clienteForm" novalidate>
                 <div class="modal-header">
                     <h5 class="modal-title">Cliente</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -36,44 +36,54 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label>Razão Social</label>
+                            <label for="razaoSocial" class="form-label">Razão Social</label>
                             <input type="text" class="form-control" id="razaoSocial" required>
+                            <div class="invalid-feedback">Informe a Razão Social.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>Nome Fantasia</label>
+                            <label for="nomeFantasia" class="form-label">Nome Fantasia</label>
                             <input type="text" class="form-control" id="nomeFantasia" required>
+                            <div class="invalid-feedback">Informe o Nome Fantasia.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>Tipo de Pessoa</label>
+                            <label for="tipoPessoa" class="form-label">Tipo de Pessoa</label>
                             <input type="text" class="form-control" id="tipoPessoa" required>
+                            <div class="invalid-feedback">Informe o Tipo de Pessoa.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>Documento</label>
+                            <label for="documento" class="form-label">Documento</label>
                             <input type="text" class="form-control" id="documento" required>
+                            <div class="invalid-feedback">Informe o Documento.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>endereco</label>
+                            <label for="endereco" class="form-label">endereco</label>
                             <input type="text" class="form-control" id="endereco" required>
+                            <div class="invalid-feedback">Informe o Endereço.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>complemento</label>
+                            <label for="complemento" class="form-label">complemento</label>
                             <input type="text" class="form-control" id="complemento" required>
+                            <div class="invalid-feedback">Informe uma  informação adicional.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>bairro</label>
+                            <label for="bairro" class="form-label">bairro</label>
                             <input type="text" class="form-control" id="bairro" required>
+                            <div class="invalid-feedback">Informe o Bairro.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>cidade</label>
+                            <label for="cidade" class="form-label">cidade</label>
                             <input type="text" class="form-control" id="cidade" required>
+                            <div class="invalid-feedback">Informe a Cidade.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>cep</label>
+                            <label for="cep" class="form-label">cep</label>
                             <input type="text" class="form-control" id="cep" required>
+                            <div class="invalid-feedback">Informe o CEP.</div>
                         </div>
                         <div class="col-md-6">
-                            <label>uf</label>
+                            <label for="uf" class="form-label">uf</label>
                             <input type="text" class="form-control" id="uf" required>
+                            <div class="invalid-feedback">Informe a UF.</div>
                         </div>
                     </div>
 
@@ -107,6 +117,13 @@
             $("#clienteForm").submit(function (e) {
                 e.preventDefault();
 
+                let form = this;
+
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+
                 const cliente = {
                     codigoCliente: $("#codigoCliente").val() || 0,
                     razaoSocial: $("#razaoSocial").val(),
@@ -122,11 +139,6 @@
                 };
 
                 if (cliente.codigoCliente == 0) {
-                    // $.post(apiUrl, cliente)
-                    //     .done(() => {
-                    //         modal.hide();
-                    //         carregarClientes();
-                    //     });
                     $.ajax({
                         url: apiUrl,
                         type: "POST",
@@ -204,6 +216,8 @@
             $("#razaoSocial").val('');
             $("#nomeFantasia").val('');
             $("#documento").val('');
+
+            // $("#clienteForm").classList.remove('was-validated');
         }
     </script>
 }
