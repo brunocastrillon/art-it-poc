@@ -13,6 +13,8 @@ namespace CRUD.Core.Application.AutoMapper
             CreateMap<Telefone, TelefoneDTO>().ForMember(dest => dest.TipoTelefoneDesc, opt => opt.MapFrom(src => src.TipoTelefone.DescricaoTipoTelefone));
 
             CreateMap<TelefoneCreateDTO, Telefone>();
+
+            CreateMap<TipoTelefone, TipoTelefoneDTO>().ReverseMap();
         }
     }
 }

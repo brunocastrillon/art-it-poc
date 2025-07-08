@@ -17,7 +17,8 @@ namespace CRUD.Infra.Data.Repositories
 
         public async Task<TipoTelefone> GetByIdAsync(int id)
         {
-            return await _context.TiposTelefones.FindAsync(id);
+            return await _context.TiposTelefones.AsNoTracking()
+                                                .FirstOrDefaultAsync(t => t.CodigoTipoTelefone == id);
         }
     }
 }

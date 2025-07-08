@@ -37,9 +37,9 @@ namespace CRUD.Interfaces.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Core.Application.DTO.TipoTelefoneDTO dto)
         {
-            await _tipoTelefoneService.AddAsync(dto);
+            Core.Application.DTO.TipoTelefoneDTO result = await _tipoTelefoneService.AddAsync(dto);
 
-            return CreatedAtAction(nameof(Get), new { id = dto.CodigoTipoTelefone }, dto);
+            return CreatedAtAction(nameof(Get), new { id = result.CodigoTipoTelefone }, result);
         }
 
         [HttpPut("{id}")]

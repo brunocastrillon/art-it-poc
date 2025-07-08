@@ -37,7 +37,8 @@ namespace CRUD.Infra.Data.Repositories
 
         public async Task<Telefone?> GetByIdAsync(int codigoCliente, string numeroTelefone)
         {
-            return await _context.Telefones.Include(t => t.TipoTelefone) // opcional
+            return await _context.Telefones.AsNoTracking()
+                                           .Include(t => t.TipoTelefone) // opcional
                                            .FirstOrDefaultAsync(t => t.CodigoCliente == codigoCliente &&
                                                                      t.NumeroTelefone == numeroTelefone);
         }

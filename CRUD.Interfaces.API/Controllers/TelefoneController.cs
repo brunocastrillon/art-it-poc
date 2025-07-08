@@ -63,7 +63,7 @@ namespace CRUD.Interfaces.API.Controllers
         [HttpPut("{codigoCliente}/{numeroTelefone}")]
         public async Task<ActionResult> Put(int codigoCliente, string numeroTelefone, [FromBody] TelefoneCreateDTO telefone)
         {
-            if (codigoCliente != telefone.CodigoCliente || numeroTelefone != telefone.NumeroTelefone)
+            if (codigoCliente != telefone.CodigoCliente) // || numeroTelefone != telefone.NumeroTelefone)
                 return BadRequest("Chave primária não confere.");
 
             var existente = await _telefoneService.GetByIdAsync(codigoCliente, numeroTelefone);
