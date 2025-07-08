@@ -147,6 +147,7 @@
 
             $("#clienteForm").submit(function (e) {
                 e.preventDefault();
+
                 const form = this;
 
                 if (!form.checkValidity()) {
@@ -253,7 +254,7 @@
                 $.get(`${apiUrl}/${id}`, function (cliente) {
                     const tbody = $("#tabelaTelefones tbody").empty();
                     (cliente.telefones || []).forEach(t => {
-                        tbody.append(`<tr><td>${t.numeroTelefone}</td><td>${t.tipoTelefone?.descricaoTipoTelefone || ''}</td><td>${t.operadora}</td></tr>`);
+                        tbody.append(`<tr><td>${t.numeroTelefone}</td><td>${t.tipoTelefoneDesc || ''}</td><td>${t.operadora}</td></tr>`);
                     });
                 });
             });

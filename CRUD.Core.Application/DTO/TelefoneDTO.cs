@@ -26,7 +26,7 @@ namespace CRUD.Core.Application.DTO
         public bool Ativo { get; set; }
     }
 
-    public class TelefoneDTO
+    public class TelefoneResponseDTO
     {
         public int CodigoCliente { get; set; }
         

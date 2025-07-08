@@ -15,36 +15,36 @@ namespace CRUD.Core.Application.Services.Telefone
             _mapper = mapper;
         }
 
-        public async Task<TelefoneDTO> AddAsync(TelefoneCreateDTO telefoneDTO)
+        public async Task<TelefoneResponseDTO> AddAsync(TelefoneCreateDTO telefoneCreateDTO)
         {
-            Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(telefoneDTO);
+            Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(telefoneCreateDTO);
             Domain.Entities.Telefone entidadeResult = await _telefoneRepository.CreateAsync(entidade);
-            
-            TelefoneDTO dtoResult = _mapper.Map<TelefoneDTO>(entidadeResult);
+
+            TelefoneResponseDTO dtoResult = _mapper.Map<TelefoneResponseDTO>(entidadeResult);
 
             return dtoResult;
         }
 
-        public async Task<IEnumerable<TelefoneDTO>> GetAsync()
+        public async Task<IEnumerable<TelefoneResponseDTO>> GetAsync()
         {
             IEnumerable<Domain.Entities.Telefone> entidade = await _telefoneRepository.GetAsync();
-            IEnumerable<TelefoneDTO> dto = _mapper.Map<IEnumerable<TelefoneDTO>>(entidade);
+            IEnumerable<TelefoneResponseDTO> result = _mapper.Map<IEnumerable<TelefoneResponseDTO>>(entidade);
             
-            return dto;
+            return result;
         }
 
-        public async Task<IEnumerable<TelefoneDTO>> GetByClienteAsync(int codigoCliente)
+        public async Task<IEnumerable<TelefoneResponseDTO>> GetByClienteAsync(int codigoCliente)
         {
             IEnumerable<Domain.Entities.Telefone> entidade = await _telefoneRepository.GetByClienteAsync(codigoCliente);
-            IEnumerable<TelefoneDTO> dto = _mapper.Map<IEnumerable<TelefoneDTO>>(entidade);
+            IEnumerable<TelefoneResponseDTO> response = _mapper.Map<IEnumerable<TelefoneResponseDTO>>(entidade);
 
-            return dto;
+            return response;
         }
 
-        public async Task<TelefoneDTO> GetByIdAsync(int codigoCliente, string numeroTelefone)
+        public async Task<TelefoneResponseDTO> GetByIdAsync(int codigoCliente, string numeroTelefone)
         {
             Domain.Entities.Telefone entidade = await _telefoneRepository.GetByIdAsync(codigoCliente, numeroTelefone);
-            TelefoneDTO dto = _mapper.Map<TelefoneDTO>(entidade);
+            TelefoneResponseDTO dto = _mapper.Map<TelefoneResponseDTO>(entidade);
 
             return dto;
         }
@@ -56,12 +56,12 @@ namespace CRUD.Core.Application.Services.Telefone
             return result;
         }
 
-        public async Task<TelefoneDTO> UpdateAsync(TelefoneCreateDTO TelefoneDTO)
+        public async Task<TelefoneResponseDTO> UpdateAsync(TelefoneCreateDTO TelefoneCreateDTO)
         {
-            Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(TelefoneDTO);
+            Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(TelefoneCreateDTO);
             Domain.Entities.Telefone entidadeResult = await _telefoneRepository.UpdateAsync(entidade);
-            
-            TelefoneDTO dtoResult = _mapper.Map<TelefoneDTO>(entidadeResult);
+
+            TelefoneResponseDTO dtoResult = _mapper.Map<TelefoneResponseDTO>(entidadeResult);
             
             return dtoResult;
         }

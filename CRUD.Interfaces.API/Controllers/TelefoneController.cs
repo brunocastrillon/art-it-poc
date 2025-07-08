@@ -19,9 +19,9 @@ namespace CRUD.Interfaces.API.Controllers
 
         // GET: api/telefones/123
         [HttpGet("{codigoCliente}")]
-        public async Task<ActionResult<IEnumerable<TelefoneDTO>>> GetByCliente(int codigoCliente)
+        public async Task<ActionResult<IEnumerable<TelefoneResponseDTO>>> GetByCliente(int codigoCliente)
         {
-            IEnumerable<TelefoneDTO> telefones = await _telefoneService.GetByClienteAsync(codigoCliente);
+            IEnumerable<TelefoneResponseDTO> telefones = await _telefoneService.GetByClienteAsync(codigoCliente);
             
             return Ok(telefones);
         }
@@ -33,7 +33,7 @@ namespace CRUD.Interfaces.API.Controllers
         /// <param name="numeroTelefone"></param>
         /// <returns></returns>
         [HttpGet("{codigoCliente}/{numeroTelefone}")]
-        public async Task<ActionResult<TelefoneDTO>> GetPorId(int codigoCliente, string numeroTelefone)
+        public async Task<ActionResult<TelefoneResponseDTO>> GetPorId(int codigoCliente, string numeroTelefone)
         {
             var telefone = await _telefoneService.GetByIdAsync(codigoCliente, numeroTelefone);
             if (telefone == null)

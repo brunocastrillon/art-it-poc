@@ -15,48 +15,48 @@ namespace CRUD.Core.Application.Services.Cliente
             _mapper = mapper;
         }
 
-        public async Task<ClienteDTO> AddAsync(ClienteDTO clienteDTO)
+        public async Task<ClienteResponseDTO> AddAsync(ClienteCreateDTO clienteCreateDTO)
         {
-            Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteDTO);
+            Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteCreateDTO);
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.CreateAsync(entidade);
-            
-            ClienteDTO dtoResult = _mapper.Map<ClienteDTO>(entidadeResult);
+
+            ClienteResponseDTO dtoResult = _mapper.Map<ClienteResponseDTO>(entidadeResult);
 
             return dtoResult;
         }
 
-        public async Task<IEnumerable<ClienteDTO>> GetAsync()
+        public async Task<IEnumerable<ClienteResponseDTO>> GetAsync()
         {
             IEnumerable<Domain.Entities.Cliente> entidade = await _clienteRepository.GetAsync();
-            IEnumerable<ClienteDTO> dto = _mapper.Map<IEnumerable<ClienteDTO>>(entidade);
+            IEnumerable<ClienteResponseDTO> dto = _mapper.Map<IEnumerable<ClienteResponseDTO>>(entidade);
             
             return dto;
         }
 
-        public async Task<ClienteDTO> GetByIdAsync(int id)
+        public async Task<ClienteResponseDTO> GetByIdAsync(int id)
         {
             Domain.Entities.Cliente entidade = await _clienteRepository.GetByIdAsync(id);
-            ClienteDTO dto = _mapper.Map<ClienteDTO>(entidade);
+            ClienteResponseDTO dto = _mapper.Map<ClienteResponseDTO>(entidade);
             
             return dto;
         }
 
-        public async Task<ClienteDTO> RemoveAsync(int id)
+        public async Task<ClienteResponseDTO> RemoveAsync(int id)
         {
             Domain.Entities.Cliente entidade = _clienteRepository.GetByIdAsync(id).Result;
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.DeleteAsync(entidade);
-            
-            ClienteDTO dtoResult = _mapper.Map<ClienteDTO>(entidadeResult);
+
+            ClienteResponseDTO dtoResult = _mapper.Map<ClienteResponseDTO>(entidadeResult);
             
             return dtoResult;
         }
 
-        public async Task<ClienteDTO> UpdateAsync(ClienteDTO clienteDTO)
+        public async Task<ClienteResponseDTO> UpdateAsync(ClienteCreateDTO clienteCreateDTO)
         {
-            Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteDTO);
+            Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteCreateDTO);
             Domain.Entities.Cliente entidadeResult = await _clienteRepository.UpdateAsync(entidade);
-            
-            ClienteDTO dtoResult = _mapper.Map<ClienteDTO>(entidadeResult);
+
+            ClienteResponseDTO dtoResult = _mapper.Map<ClienteResponseDTO>(entidadeResult);
             
             return dtoResult;
         }

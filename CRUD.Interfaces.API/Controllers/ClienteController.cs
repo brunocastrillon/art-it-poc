@@ -34,16 +34,16 @@ namespace CRUD.Interfaces.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Core.Application.DTO.ClienteDTO cliente)
+        public async Task<ActionResult> Post([FromBody] Core.Application.DTO.ClienteCreateDTO cliente)
         {
-            Core.Application.DTO.ClienteDTO result = await _clienteService.AddAsync(cliente);
+            Core.Application.DTO.ClienteResponseDTO result = await _clienteService.AddAsync(cliente);
 
             
             return CreatedAtAction(nameof(Get), new { id = result.CodigoCliente }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] Core.Application.DTO.ClienteDTO cliente)
+        public async Task<ActionResult> Put(int id, [FromBody] Core.Application.DTO.ClienteCreateDTO cliente)
         {
             if (id != cliente.CodigoCliente)
                 return BadRequest("ID do cliente não confere com o corpo da requisição.");

@@ -12,13 +12,16 @@ namespace CRUD.Infra.Data.Repositories
 
         public async Task<IEnumerable<Cliente>> GetAsync()
         {
-            return await _context.Clientes.ToListAsync();
+            return await _context.Clientes.Include(c => c.Telefones)
+                                          .ThenInclude(t => t.TipoTelefone)
+                                          .ToListAsync();
         }
 
         public async Task<Cliente> GetByIdAsync(int id)
         {
             return await _context.Clientes.AsNoTracking()
-                                          .Include(c => c.Telefones).ThenInclude(t => t.TipoTelefone)
+                                          .Include(c => c.Telefones)
+                                          .ThenInclude(t => t.TipoTelefone)
                                           .FirstOrDefaultAsync(c => c.CodigoCliente == id);
 
         }

@@ -8,11 +8,21 @@ namespace CRUD.Core.Application.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<Cliente, ClienteDTO>().ReverseMap();
+            // Cliente para resposta
+            CreateMap<Cliente, ClienteResponseDTO>().ForMember(dest => dest.Telefones, opt => opt.MapFrom(src => src.Telefones));
 
-            CreateMap<Telefone, TelefoneDTO>().ForMember(dest => dest.TipoTelefoneDesc, opt => opt.MapFrom(src => src.TipoTelefone.DescricaoTipoTelefone));
+            // Cliente para criação
+            CreateMap<ClienteCreateDTO, Cliente>().ForMember(dest => dest.Telefones, opt => opt.MapFrom(src => src.Telefones));
 
+            // Base reversível (opcional)
+            CreateMap<ClienteDTO, Cliente>().ReverseMap();
+
+            // Telefones de entrada
             CreateMap<TelefoneCreateDTO, Telefone>();
+
+            // Telefones de saída
+            CreateMap<Telefone, TelefoneResponseDTO>().ForMember(dest => dest.TipoTelefoneDesc, opt => opt.MapFrom(src => src.TipoTelefone.DescricaoTipoTelefone));
+
 
             CreateMap<TipoTelefone, TipoTelefoneDTO>().ReverseMap();
         }

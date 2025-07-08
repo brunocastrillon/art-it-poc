@@ -67,4 +67,14 @@ namespace CRUD.Core.Application.DTO
         [DisplayName("UF")]
         public string UF { get; set; } = string.Empty;
     }
+
+    public class ClienteCreateDTO : ClienteDTO
+    {
+        public List<TelefoneCreateDTO> Telefones { get; set; } = new();
+    }
+
+    public class ClienteResponseDTO : ClienteDTO
+    {
+        public List<TelefoneResponseDTO> Telefones { get; set; } = new();
+    }
 }

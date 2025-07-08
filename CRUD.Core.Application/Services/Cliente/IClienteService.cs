@@ -4,14 +4,14 @@ namespace CRUD.Core.Application.Services.Cliente
 {
     public interface IClienteService
     {
-        Task<ClienteDTO> AddAsync(ClienteDTO clienteDTO);
+        Task<ClienteResponseDTO> AddAsync(ClienteCreateDTO clienteDTO);
 
-        Task<IEnumerable<ClienteDTO>> GetAsync();
+        Task<IEnumerable<ClienteResponseDTO>> GetAsync();
 
-        Task<ClienteDTO> GetByIdAsync(int id);
+        Task<ClienteResponseDTO> GetByIdAsync(int id);
 
-        Task<ClienteDTO> RemoveAsync(int id);
+        Task<ClienteResponseDTO> RemoveAsync(int id);
 
-        Task<ClienteDTO> UpdateAsync(ClienteDTO clienteDTO);
+        Task<ClienteResponseDTO> UpdateAsync(ClienteCreateDTO clienteDTO);
     }
 }

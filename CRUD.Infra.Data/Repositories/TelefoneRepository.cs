@@ -32,13 +32,16 @@ namespace CRUD.Infra.Data.Repositories
 
         public async Task<IEnumerable<Telefone>> GetByClienteAsync(int codigoCliente)
         {
-            return await _context.Telefones.Where(m => m.CodigoCliente == codigoCliente).ToListAsync();
+            return await _context.Telefones.AsNoTracking()
+                                           .Include(t => t.TipoTelefone)
+                                           .Where(m => m.CodigoCliente == codigoCliente)
+                                           .ToListAsync();
         }
 
         public async Task<Telefone?> GetByIdAsync(int codigoCliente, string numeroTelefone)
         {
             return await _context.Telefones.AsNoTracking()
-                                           .Include(t => t.TipoTelefone) // opcional
+                                           .Include(t => t.TipoTelefone)
                                            .FirstOrDefaultAsync(t => t.CodigoCliente == codigoCliente &&
                                                                      t.NumeroTelefone == numeroTelefone);
         }
