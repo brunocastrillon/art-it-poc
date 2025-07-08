@@ -15,7 +15,7 @@
 <table class="table table-bordered" id="clientesTable">
     <thead>
         <tr>
-            <th>Código</th>
+            @* <th>Código</th> *@
             <th>Razão Social</th>
             <th>Nome Fantasia</th>
             <th>Documento</th>
@@ -388,19 +388,20 @@
             });
         });
 
+        //<td>${c.codigoCliente}</td>
         function carregarClientes() {
             $.get(apiUrl, function (data) {
                 const tbody = $("#clientesTable tbody").empty();
                 data.forEach(c => {
                     tbody.append(`<tr>
-                        <td>${c.codigoCliente}</td>
+                        
                         <td>${c.razaoSocial}</td>
                         <td>${c.nomeFantasia}</td>
                         <td>${c.documento}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm btn-editar" data-id="${c.codigoCliente}">Editar</button>
-                            <button class="btn btn-danger btn-sm btn-excluir" data-id="${c.codigoCliente}">Excluir</button>
-                            <button class="btn btn-info btn-sm btn-vertelefones" data-id="${c.codigoCliente}">Telefones</button>
+                            <button class="btn btn-sm btn-outline-warning btn-editar me-1" data-id="${c.codigoCliente}" title="Editar"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-sm btn-outline-danger btn-excluir me-1" data-id="${c.codigoCliente}" title="Excluir"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-outline-primary btn-vertelefones" data-id="${c.codigoCliente}" title="Ver Telefones"><i class="bi bi-telephone"></i></button>
                         </td>
                     </tr>`);
                 });
@@ -428,7 +429,7 @@
                         <td>${t.numeroTelefone}</td>
                         <td>${tipoDescricao}</td>
                         <td>${t.operadora}</td>
-                        <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}" data-cliente="${clienteId}">Remover</button></td>
+                        <td><button class="btn btn-sm btn-outline-danger btn-remover-telefone me-1" data-numero="${t.numeroTelefone}" data-cliente="${clienteId}" title="Excluir"><i class="bi bi-trash"></i></button></td>
                     </tr>
                 `);
             });
