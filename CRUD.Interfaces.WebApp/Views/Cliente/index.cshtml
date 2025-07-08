@@ -58,7 +58,8 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tipo Pessoa</label>
-                            <input type="text" class="form-control" id="tipoPessoa">
+                            <input type="text" name="tipoPessoa" id="tipoPessoa" maxlength="2" pattern="[A-Za-z]{2}" title="Informe exatamente duas letras" class="form-control" required>
+                            <small class="form-text text-muted">Tipo Pessoa deve conter 2 letras. Ex: PF/PJ</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Documento</label>
@@ -83,11 +84,13 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">CEP</label>
-                            <input type="text" class="form-control" id="cep">
+                            <input type="text" name="cep" id="cep" maxlength="8" minlength="8" pattern="\d{8}" title="Informe 8 dígitos numéricos" class="form-control" required>
+                            <small class="form-text text-muted">CEP deve conter exatamente 8 dígitos. Ex: 76803596</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">UF</label>
-                            <input type="text" class="form-control" id="uf">
+                            <input type="text" name="uf" id="uf" maxlength="2" pattern="[A-Za-z]{2}" title="Informe exatamente duas letras" class="form-control" required>
+                            <small class="form-text text-muted">UF deve conter 2 letras. Ex: RO</small>
                         </div>
                     </div>
 
@@ -95,7 +98,8 @@
                     <h5>Telefones</h5>
                     <div class="row g-2 mb-2">
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="numeroTelefone" placeholder="Número">
+                            <input type="text" id="numeroTelefone" name="numeroTelefone" class="form-control" maxlength="19" placeholder="Digite o telefone" pattern="^(\+55\s)?\(\d{2}\)\s\d\s\d{4}-\d{4}$">
+                            <small class="form-text text-muted">informe somente números</small>
                         </div>
                         <div class="col-md-4">
                             <input type="text" class="form-control" id="operadora" placeholder="Operadora">
@@ -132,6 +136,48 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function aplicarMascaraTelefone(valor) {
+            valor = valor.replace(/\D/g, ""); // Remove tudo que não for número
+
+            if (valor.startsWith("55")) {
+                // Com DDI +55
+                return valor.replace(/^(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$/, "+$1 ($2) $3 $4-$5");
+            } else {
+                // Sem DDI
+                return valor.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, "($1) $2 $3-$4");
+            }
+        }
+
+        $(document).on("input", "#numeroTelefone", function () {
+            let valor = $(this).val().replace(/\D/g, "");
+
+            if (valor.length > 13) {
+                valor = valor.substring(0, 13);
+            }
+
+            $(this).val(aplicarMascaraTelefone(valor));
+        });
+    </script>
+
+    <script>
+        $("#tipoPessoa").on("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z]/g, "").toUpperCase();
+        });
+    </script>
+
+    <script>
+        $("#uf").on("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z]/g, "").toUpperCase();
+        });
+    </script>
+
+    <script>
+        $("#cep").on("input", function () {
+            this.value = this.value.replace(/\D/g, "");
+        });
+    </script>
 
     <script>
         const apiUrl = "https://localhost:7294/api/cliente";

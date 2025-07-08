@@ -20,9 +20,9 @@ namespace CRUD.Core.Application.DTO
         public string NomeFantasia { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "TipoPessoa é obrigatório")]
-        [MinLength(3)]
-        [MaxLength(100)]
-        [DisplayName("TipoPessoa")]
+        [MinLength(2)]
+        [MaxLength(2)]
+        [DisplayName("Tipo de Pessoa(Fisica(pf)/Juridica(pj))")]
         public string TipoPessoa { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Documento é obrigatório")]
@@ -56,14 +56,14 @@ namespace CRUD.Core.Application.DTO
         public string Cidade { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "CEP é obrigatório")]
-        [MinLength(3)]
-        [MaxLength(100)]
+        [MinLength(8)]
+        [MaxLength(8)]
         [DisplayName("CEP")]
         public string CEP { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "UF é obrigatório")]
-        [MinLength(3)]
-        [MaxLength(100)]
+        [MinLength(2)]
+        [MaxLength(2)]
         [DisplayName("UF")]
         public string UF { get; set; } = string.Empty;
     }
