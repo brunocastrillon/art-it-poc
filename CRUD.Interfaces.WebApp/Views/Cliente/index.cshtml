@@ -110,6 +110,7 @@
                         <thead>
                             <tr>
                                 <th>Número</th>
+                                <th>Tipo</th>
                                 <th>Operadora</th>
                                 <th>Ações</th>
                             </tr>
@@ -155,6 +156,24 @@
                     return;
                 }
 
+                telefonesTemp.forEach(t => {
+                    console.log(t);
+                    console.log(t.tipoTelefoneDesc);
+                    console.log(obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc));
+                    console.log(t.codigoTipoTelefone);
+                });
+
+                // Normaliza os telefones da lista temporária
+                const telefonesFormatados = telefonesTemp.map(t => ({
+                    numeroTelefone: t.numeroTelefone,
+                    operadora: t.operadora,
+                    codigoTipoTelefone: t.tipoTelefoneDesc ? obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc)
+                                                           : t.codigoTipoTelefone ?? t.tipoTelefone?.codigoTipoTelefone ?? null,
+                    ativo: t.ativo ?? true,
+                    dataInsercao: t.dataInsercao ?? new Date().toISOString(),
+                    usuarioInsercao: t.usuarioInsercao ?? "WebApp"
+                }));
+
                 const cliente = {
                     codigoCliente: $("#codigoCliente").val() || 0,
                     razaoSocial: $("#razaoSocial").val(),
@@ -167,32 +186,38 @@
                     cidade: $("#cidade").val(),
                     cep: $("#cep").val(),
                     uf: $("#uf").val(),
-                    telefones: telefonesTemp
+                    telefones: telefonesFormatados
                 };
 
-                const metodo = cliente.codigoCliente == 0 ? "POST" : "PUT";
-                const url = cliente.codigoCliente == 0 ? apiUrl : `${apiUrl}/${cliente.codigoCliente}`;
+                const isEdicao = cliente.codigoCliente > 0;
+                const verbo = isEdicao ? "PUT" : "POST";
+                const url = isEdicao ? `https://localhost:7294/api/Cliente/${cliente.codigoCliente}` : `https://localhost:7294/api/Cliente`;
 
                 $.ajax({
+                    type: verbo,
                     url: url,
-                    type: metodo,
                     contentType: "application/json",
                     data: JSON.stringify(cliente),
-                    success: () => {
-                        modal.hide();
-                        carregarClientes();
+                    success: function () {
+                        $("#clienteModal").modal("hide");
+                        carregarClientes(); // Atualiza a lista
+                        exibirMensagem("Cliente salvo com sucesso!");
+                    },
+                    error: function (xhr) {
+                        const erro = xhr.responseJSON?.title || "Erro ao salvar cliente.";
+                        exibirMensagem(erro, true);
                     }
                 });
             });
 
             $("#btnAddTelefone").click(() => {
-                const numero = $("#numeroTelefone").val();
+                const numero = $("#numeroTelefone").val().replace(/\D/g, "");
                 const operadora = $("#operadora").val();
                 const tipoId = $("#tipoTelefoneSelect").val();
                 const tipoTexto = $("#tipoTelefoneSelect option:selected").text();
 
                 if (!numero || !operadora || !tipoId) {
-                    alert("Informe número, operadora e tipo.");
+                    alert("Preencha todos os campos do telefone.");
                     return;
                 }
 
@@ -205,16 +230,13 @@
                     numeroTelefone: numero,
                     operadora: operadora,
                     codigoTipoTelefone: parseInt(tipoId),
-                    tipoTelefone: { descricaoTipoTelefone: tipoTexto },
                     ativo: true,
                     dataInsercao: new Date().toISOString(),
                     usuarioInsercao: "WebApp"
                 });
 
                 atualizarTabelaTelefonesTemp();
-                $("#numeroTelefone").val('');
-                $("#operadora").val('');
-                $("#tipoTelefoneSelect").val('');
+                limparCamposTelefone();
             });
 
             $(document).on("click", ".btn-editar", function () {
@@ -281,19 +303,52 @@
 
         function atualizarTabelaTelefonesTemp() {
             const tbody = $("#tabelaTelefonesTemp tbody").empty();
+
             telefonesTemp.forEach(t => {
-                tbody.append(`<tr>
-                    <td>${t.numeroTelefone}</td>
-                    <td>${t.operadora}</td>
-                    <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}">Remover</button></td>
-                </tr>`);
+
+                console.log(t);
+
+                const idTipoTelefone = obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc);
+                const descricaoTipo = t.tipoTelefone?.descricaoTipoTelefone || obterDescricaoTipoTelefone(t.codigoTipoTelefone) || "N/A";
+
+                console.log(idTipoTelefone);
+                console.log(descricaoTipo);
+
+                tbody.append(`
+                    <tr>
+                        <td>${t.numeroTelefone}</td>
+                        <td>${t.tipoTelefoneDesc}</td>
+                        <td>${t.operadora}</td>
+                        <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}" data-cliente="${t.codigoCliente}">Remover</button></td>
+                    </tr>
+                `);
             });
         }
 
+
         $(document).on("click", ".btn-remover-telefone", function () {
             const numero = $(this).data("numero");
-            telefonesTemp = telefonesTemp.filter(t => t.numeroTelefone !== numero);
-            atualizarTabelaTelefonesTemp();
+            const cliente = $(this).data("cliente");
+
+            if (!cliente || cliente == 0) {
+                telefonesTemp = telefonesTemp.filter(t => t.numeroTelefone !== numero);
+                atualizarTabelaTelefonesTemp();
+            } else {
+                if (!confirm("Deseja remover este telefone do banco de dados?")) return;
+
+                $.ajax({
+                    url: `https://localhost:7294/api/Telefones/${cliente}/${numero}`,
+                    type: "DELETE",
+                    success: function () {
+                        alert("Telefone removido com sucesso!");
+                        carregarClientes();
+                    },
+                    error: function (err) {
+                        console.error("Erro ao remover telefone:", err);
+                        alert("Erro ao remover telefone.");
+                    }
+                });
+            }
         });
 
         function carregarTiposTelefone() {
@@ -311,5 +366,23 @@
             telefonesTemp = [];
             atualizarTabelaTelefonesTemp();
         }
+
+        function obterDescricaoTipoTelefone(codigo) {
+            return $(`#tipoTelefone option[value='${codigo}']`).text();
+        }
+
+        function limparCamposTelefone() {
+            $("#numeroTelefone").val("");
+            $("#operadora").val("");
+            $("#tipoTelefone").val("");
+        }
+
+        function obterCodigoTipoTelefonePorDescricao(descricao) {
+            const option = $("#tipoTelefone option").filter(function () {
+                return $(this).text().trim() === descricao.trim();
+            }).first();
+            return option.length ? parseInt(option.val()) : null;
+        }
+
     </script>
 }

@@ -30,6 +30,7 @@ namespace CRUD.Infra.Data.Repository
         public async Task<T> UpdateAsync<T>(T entity) where T : class
         {
             _context.Update(entity);
+            //_context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return entity;
         }

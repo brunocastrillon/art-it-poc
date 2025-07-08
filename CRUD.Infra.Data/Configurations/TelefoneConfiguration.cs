@@ -18,7 +18,7 @@ namespace CRUD.Infra.Data.Configurations
             builder.Property(t => t.DataInsercao).IsRequired();
             builder.Property(t => t.UsuarioInsercao).IsRequired();
 
-            builder.HasOne(t => t.Cliente).WithMany(c => c.Telefones).HasForeignKey(t => t.CodigoCliente);
+            builder.HasOne(t => t.Cliente).WithMany(c => c.Telefones).HasForeignKey(t => t.CodigoCliente).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(t => t.TipoTelefone).WithMany(tt => tt.Telefones).HasForeignKey(t => t.CodigoTipoTelefone);
         }
     }

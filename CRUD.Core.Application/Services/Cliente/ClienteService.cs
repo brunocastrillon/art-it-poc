@@ -53,12 +53,33 @@ namespace CRUD.Core.Application.Services.Cliente
 
         public async Task<ClienteResponseDTO> UpdateAsync(ClienteCreateDTO clienteCreateDTO)
         {
-            Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteCreateDTO);
-            Domain.Entities.Cliente entidadeResult = await _clienteRepository.UpdateAsync(entidade);
+            //Domain.Entities.Cliente entidade = _mapper.Map<Domain.Entities.Cliente>(clienteCreateDTO);
+            //Domain.Entities.Cliente entidadeResult = await _clienteRepository.UpdateAsync(entidade);
+            //ClienteResponseDTO dtoResult = _mapper.Map<ClienteResponseDTO>(entidadeResult);
+            //return dtoResult;
 
-            ClienteResponseDTO dtoResult = _mapper.Map<ClienteResponseDTO>(entidadeResult);
-            
-            return dtoResult;
+            var clienteExistente = await _clienteRepository.GetByIdAsync(clienteCreateDTO.CodigoCliente);
+
+            if (clienteExistente == null)
+                throw new Exception("Cliente não encontrado.");
+
+            // Atualiza campos simples
+            _mapper.Map(clienteCreateDTO, clienteExistente);
+
+            // Telefones antigos são substituídos
+            clienteExistente.Telefones.Clear();
+
+            // Mapeia e adiciona os telefones novos
+            var telefonesNovos = _mapper.Map<List<TelefoneCreateDTO>>(clienteCreateDTO.Telefones);
+            foreach (var telefone in telefonesNovos)
+            {
+                Domain.Entities.Telefone entidade = _mapper.Map<Domain.Entities.Telefone>(telefone);
+                clienteExistente.Telefones.Add(entidade);
+            }
+
+            // Salva alterações
+            var clienteAtualizado = await _clienteRepository.UpdateAsync(clienteExistente);
+            return _mapper.Map<ClienteResponseDTO>(clienteAtualizado);
         }
     }
 }
