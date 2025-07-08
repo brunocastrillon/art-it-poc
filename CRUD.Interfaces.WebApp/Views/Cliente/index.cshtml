@@ -8,6 +8,10 @@
 
 <button class="btn btn-success mb-3" id="btnNovo">Novo Cliente</button>
 
+<button class="btn btn-secondary mb-3" id="btnNovoTipoTelefone" data-bs-toggle="modal" data-bs-target="#tipoTelefoneModal">
+    Novo Tipo de Telefone
+</button>
+
 <table class="table table-bordered" id="clientesTable">
     <thead>
         <tr>
@@ -33,7 +37,7 @@
     <tbody></tbody>
 </table>
 
-<!-- Modal -->
+<!-- Modal - Cliente -->
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -132,6 +136,31 @@
         </div>
     </div>
 </div>
+
+<!-- Modal - Tipo de Telefone -->
+<div class="modal fade" id="tipoTelefoneModal" tabindex="-1" aria-labelledby="tipoTelefoneModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formTipoTelefone">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tipoTelefoneModalLabel">Novo Tipo de Telefone</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="descricaoTipoTelefone" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="descricaoTipoTelefone" required minlength="3" maxlength="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -470,4 +499,36 @@
         }
 
     </script>
+
+    <script>
+        $("#formTipoTelefone").submit(function (e) {
+            e.preventDefault();
+
+            const descricao = $("#descricaoTipoTelefone").val().trim();
+            if (!descricao) {
+                alert("Informe a descrição do tipo de telefone.");
+                return;
+            }
+
+            $.ajax({
+                url: "https://localhost:7294/api/TipoTelefone",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ descricaoTipoTelefone: descricao }),
+                success: function () {
+                    alert("Tipo de telefone cadastrado com sucesso!");
+                    const modalEl = document.getElementById('tipoTelefoneModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    modalInstance.hide();
+
+                    $("#descricaoTipoTelefone").val("");
+                    carregarTiposTelefone();
+                },
+                error: function () {
+                    alert("Erro ao cadastrar tipo de telefone.");
+                }
+            });
+        });
+    </script>
+
 }
