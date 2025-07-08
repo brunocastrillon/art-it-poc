@@ -119,5 +119,5 @@ WebApp:  https://localhost:7035/Cliente
 ## 📫 Contato & Portfolio
 
 Desenvolvido por **Bruno Castrillon**
-- Medium: https://medium.com/@@brunocastrillon  
-- GitHub: https://github.com/brunocastrillon  
+- Medium: https://medium.com/@brunocastrillon  
+- Linkedin: https://www.linkedin.com/in/brunocastrillon/  
