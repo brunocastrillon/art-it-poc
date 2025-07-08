@@ -517,9 +517,16 @@
                 data: JSON.stringify({ descricaoTipoTelefone: descricao }),
                 success: function () {
                     alert("Tipo de telefone cadastrado com sucesso!");
+
                     const modalEl = document.getElementById('tipoTelefoneModal');
                     const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                    modalInstance.hide();
+
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+
+                    $(".modal-backdrop").remove();
+                    $("body").removeClass("modal-open");
 
                     $("#descricaoTipoTelefone").val("");
                     carregarTiposTelefone();
