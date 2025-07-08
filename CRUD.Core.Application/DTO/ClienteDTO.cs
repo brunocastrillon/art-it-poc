@@ -71,10 +71,20 @@ namespace CRUD.Core.Application.DTO
     public class ClienteCreateDTO : ClienteDTO
     {
         public List<TelefoneCreateDTO> Telefones { get; set; } = new();
+
+        public List<TelefoneRemoverDTO> TelefonesRemovidos { get; set; } = new();
     }
 
     public class ClienteResponseDTO : ClienteDTO
     {
         public List<TelefoneResponseDTO> Telefones { get; set; } = new();
     }
+
+    public class TelefoneRemoverDTO
+    {
+        public int CodigoCliente { get; set; }
+
+        public string NumeroTelefone { get; set; } = string.Empty;
+    }
+
 }

@@ -2,6 +2,8 @@
     ViewData["Title"] = "Clientes";
 }
 
+<div id="mensagemAlerta" class="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
 <h2>Clientes</h2>
 
 <button class="btn btn-success mb-3" id="btnNovo">Novo Cliente</button>
@@ -135,6 +137,26 @@
         const apiUrl = "https://localhost:7294/api/cliente";
         let modal;
         let telefonesTemp = [];
+        let telefonesRemovidos = [];
+
+        function exibirMensagem(mensagem, isErro = false) {
+            const alertDiv = $("#mensagemAlerta");
+
+            if (alertDiv.length === 0) {
+                // Se o elemento de alerta não existe no HTML, cria dinamicamente
+                const alertHtml = `<div id="mensagemAlerta" class="alert" style="display:none; position:fixed; top:20px; right:20px; z-index:9999;"></div>`;
+                $("body").append(alertHtml);
+            }
+
+            $("#mensagemAlerta")
+                .removeClass("alert-success alert-danger")
+                .addClass(isErro ? "alert-danger" : "alert-success")
+                .text(mensagem)
+                .fadeIn(300)
+                .delay(2500)
+                .fadeOut(300);
+        }
+
 
         $(document).ready(function () {
             modal = new bootstrap.Modal(document.getElementById('clienteModal'));
@@ -146,6 +168,7 @@
                 modal.show();
             });
 
+            /// - Salvar(create/update)
             $("#clienteForm").submit(function (e) {
                 e.preventDefault();
 
@@ -156,17 +179,11 @@
                     return;
                 }
 
-                telefonesTemp.forEach(t => {
-                    console.log(t);
-                    console.log(t.tipoTelefoneDesc);
-                    console.log(obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc));
-                    console.log(t.codigoTipoTelefone);
-                });
-
                 // Normaliza os telefones da lista temporária
                 const telefonesFormatados = telefonesTemp.map(t => ({
                     numeroTelefone: t.numeroTelefone,
                     operadora: t.operadora,
+
                     codigoTipoTelefone: t.tipoTelefoneDesc ? obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc)
                                                            : t.codigoTipoTelefone ?? t.tipoTelefone?.codigoTipoTelefone ?? null,
                     ativo: t.ativo ?? true,
@@ -186,7 +203,20 @@
                     cidade: $("#cidade").val(),
                     cep: $("#cep").val(),
                     uf: $("#uf").val(),
-                    telefones: telefonesFormatados
+                    telefones: telefonesTemp.map(t => ({
+                                                        numeroTelefone: t.numeroTelefone,
+                                                        operadora: t.operadora,
+                                                        codigoTipoTelefone: t.codigoTipoTelefone || obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc),
+                                                        ativo: t.ativo ?? true,
+                                                        dataInsercao: t.dataInsercao ?? new Date().toISOString(),
+                                                        usuarioInsercao: t.usuarioInsercao ?? "WebApp"
+                                                    })),
+                    telefonesRemovidos: telefonesRemovidos.map(t => ({
+                                                                        numeroTelefone: t.numeroTelefone,
+                                                                        operadora: t.operadora,
+                                                                        codigoTipoTelefone: t.codigoTipoTelefone || obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc),
+                                                                        ativo: t.ativo
+                                                                    }))
                 };
 
                 const isEdicao = cliente.codigoCliente > 0;
@@ -230,6 +260,7 @@
                     numeroTelefone: numero,
                     operadora: operadora,
                     codigoTipoTelefone: parseInt(tipoId),
+                    tipoTelefoneDesc: tipoTexto,
                     ativo: true,
                     dataInsercao: new Date().toISOString(),
                     usuarioInsercao: "WebApp"
@@ -304,51 +335,56 @@
         function atualizarTabelaTelefonesTemp() {
             const tbody = $("#tabelaTelefonesTemp tbody").empty();
 
+            if (telefonesTemp.length === 0) {
+                tbody.append(`
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Nenhum telefone cadastrado</td>
+                    </tr>
+                `);
+                return;
+            }
+
             telefonesTemp.forEach(t => {
-
-                console.log(t);
-
-                const idTipoTelefone = obterCodigoTipoTelefonePorDescricao(t.tipoTelefoneDesc);
-                const descricaoTipo = t.tipoTelefone?.descricaoTipoTelefone || obterDescricaoTipoTelefone(t.codigoTipoTelefone) || "N/A";
-
-                console.log(idTipoTelefone);
-                console.log(descricaoTipo);
+                const tipoDescricao = t.tipoTelefoneDesc || t.tipoTelefone?.descricaoTipoTelefone || "Não informado";
+                const clienteId = t.codigoCliente || 0;
 
                 tbody.append(`
                     <tr>
                         <td>${t.numeroTelefone}</td>
-                        <td>${t.tipoTelefoneDesc}</td>
+                        <td>${tipoDescricao}</td>
                         <td>${t.operadora}</td>
-                        <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}" data-cliente="${t.codigoCliente}">Remover</button></td>
+                        <td><button class="btn btn-danger btn-sm btn-remover-telefone" data-numero="${t.numeroTelefone}" data-cliente="${clienteId}">Remover</button></td>
                     </tr>
                 `);
             });
         }
 
-
         $(document).on("click", ".btn-remover-telefone", function () {
-            const numero = $(this).data("numero");
+            const numero = String($(this).data("numero")).trim();
             const cliente = $(this).data("cliente");
 
+            console.log(numero);
+            console.log(cliente);
+
+            // Se for novo (não tem cliente no banco)
             if (!cliente || cliente == 0) {
                 telefonesTemp = telefonesTemp.filter(t => t.numeroTelefone !== numero);
-                atualizarTabelaTelefonesTemp();
             } else {
-                if (!confirm("Deseja remover este telefone do banco de dados?")) return;
+                // Marca para remoção no backend
+                console.log("numeroClicado:", numero);
+                console.log("telefonesTemp:", telefonesTemp.map(t => t.numeroTelefone));
 
-                $.ajax({
-                    url: `https://localhost:7294/api/Telefones/${cliente}/${numero}`,
-                    type: "DELETE",
-                    success: function () {
-                        alert("Telefone removido com sucesso!");
-                        carregarClientes();
-                    },
-                    error: function (err) {
-                        console.error("Erro ao remover telefone:", err);
-                        alert("Erro ao remover telefone.");
-                    }
-                });
+                const telefoneParaRemover = telefonesTemp.find(t => String(t.numeroTelefone).trim() === numero);
+
+                console.log(telefoneParaRemover);
+
+                if (telefoneParaRemover) {
+                    telefonesRemovidos.push(telefoneParaRemover);
+                    telefonesTemp = telefonesTemp.filter(t => t.numeroTelefone !== numero);
+                }
             }
+
+            atualizarTabelaTelefonesTemp();
         });
 
         function carregarTiposTelefone() {
@@ -378,9 +414,12 @@
         }
 
         function obterCodigoTipoTelefonePorDescricao(descricao) {
-            const option = $("#tipoTelefone option").filter(function () {
-                return $(this).text().trim() === descricao.trim();
+            descricao = descricao !== undefined ? descricao.trim().toLowerCase() : descricao;
+
+            const option = $("#tipoTelefoneSelect option").filter(function () {
+                return $(this).text().trim().toLowerCase() === descricao;
             }).first();
+
             return option.length ? parseInt(option.val()) : null;
         }
 

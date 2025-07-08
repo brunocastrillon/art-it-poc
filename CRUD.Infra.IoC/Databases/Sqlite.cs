@@ -13,7 +13,7 @@ namespace CRUD.Infra.IoC.Databases
                 options.UseSqlite(
                     configuration.GetConnectionString("Sqlite"),
                     ob => ob.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-                )
+                ).EnableSensitiveDataLogging()
             );
 
             return services;

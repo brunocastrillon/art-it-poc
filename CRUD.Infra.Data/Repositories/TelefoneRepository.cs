@@ -45,5 +45,21 @@ namespace CRUD.Infra.Data.Repositories
                                            .FirstOrDefaultAsync(t => t.CodigoCliente == codigoCliente &&
                                                                      t.NumeroTelefone == numeroTelefone);
         }
+
+        public async Task RemoverTelefonesAntigosAsync(int codigoCliente)
+        {
+            List<Telefone> telefonesAntigos = await _context.Telefones.Where(t => t.CodigoCliente == codigoCliente).ToListAsync();
+
+            if (telefonesAntigos.Any())
+            {
+                _context.Telefones.RemoveRange(telefonesAntigos);
+                await _context.SaveChangesAsync();
+
+                foreach (var telefone in telefonesAntigos)
+                {
+                    _context.Entry(telefone).State = EntityState.Detached;
+                }
+            }
+        }
     }
 }

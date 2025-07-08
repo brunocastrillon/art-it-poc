@@ -11,5 +11,7 @@ namespace CRUD.Core.Domain.Contracts
         Task<Telefone?> GetByIdAsync(int codigoCliente, string numeroTelefone);
 
         Task<bool> DeleteTelefoneAsync(int codigoCliente, string numeroTelefone);
+
+        Task RemoverTelefonesAntigosAsync(int codigoCliente);
     }
 }
