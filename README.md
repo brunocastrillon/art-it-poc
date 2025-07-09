@@ -20,7 +20,7 @@ Infra/
 
 Interfaces/
 ├─ CRUD.Interfaces.API     → Controllers REST via API, entrada de dados JSON
-└─ CRUD.Interfaces.WebApp  → Front-end MVC + Razor explicando chamadas AJAX
+└─ CRUD.Interfaces.WebApp  → Front-end MVC + Razor com chamadas AJAX
 ```
 
 ---
